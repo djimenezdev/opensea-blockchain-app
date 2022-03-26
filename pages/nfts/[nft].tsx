@@ -28,7 +28,7 @@ const NftItemId: NextPage = () => {
         (async () => {
           await nftCollection.getAll().then(async (data) => {
             if(data?.length) {
-              setSelectedNft(data.find((nft) => parseInt(nft?.metadata?.id?._hex,16) === parseInt(router?.query?.nft)));
+              setSelectedNft(data.find((nft) => parseInt(nft?.metadata?.id?._hex,16) === parseInt(router.query.nft as string)));
             }
         }
         )})();
