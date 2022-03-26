@@ -22,7 +22,7 @@ export default async function handler(
       res.json(collectionData)
     } else {
 await client.create({_id:req.body.address, _type:'users', userName:req.body.address,walletAddress:req.body.address}).then(async ({walletAddress, userName}:{walletAddress:string, userName:string}) => {
-    await client.patch("c899335f-a341-4f30-a053-b1e682fa0ae4").insert('after','owners[-1]',[{_key:walletAddress,userName,walletAddress}]).commit();
+    await client.patch(process.env.MARKET_ID).insert('after','owners[-1]',[{_key:walletAddress,userName,walletAddress}]).commit();
     res.end()
 }).catch((err:any) => res.status(409).send('Document already exists'))
 
