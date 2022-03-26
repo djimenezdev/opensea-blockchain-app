@@ -1,12 +1,6 @@
-/* Tailwind */
-
-/* purgecss start ignore */
 @tailwind base;
 @tailwind components;
-/* purgecss end ignore */
 @tailwind utilities;
-
-/* Tailwind */
 
 * {
   box-sizing: border-box;
