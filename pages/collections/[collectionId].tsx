@@ -82,7 +82,7 @@ const Collection:NextPage = () => {
   useEffect(() => {
     if(!collectionId) return;
     const fetchCollectionData = async () => {
-        const fetchCollection = await fetch('http://localhost:3000/api/collectionData',{
+        const fetchCollection = await fetch('https://os-market-clone.vercel.app/api/collectionData',{
           method:'POST',
           body:JSON.stringify({collectionId: collectionId, url:"/collections"}),
           headers:{

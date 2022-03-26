@@ -37,7 +37,7 @@ console.log(address)
         color:"#fff"
       }
     })
-    await fetch('http://localhost:3000/api/collectionData',{method:"POST",headers:{'Content-Type':'application/json'}, body:JSON.stringify({address:address})})
+    await fetch('https://os-market-clone.vercel.app/api/collectionData',{method:"POST",headers:{'Content-Type':'application/json'}, body:JSON.stringify({address:address})})
   }
 
 
