@@ -11,7 +11,15 @@ const style = {
   accent: `text-[#2081e2]`,
 };
 
-const EventItem = ({ event }: { event: any }) => {
+const EventItem = ({
+  event,
+  listings,
+  listingId,
+}: {
+  event: any;
+  listings: any;
+  listingId: string;
+}) => {
   return (
     <div className={style.eventItem}>
       <div className={`${style.event} flex-[2]`}>
@@ -22,7 +30,15 @@ const EventItem = ({ event }: { event: any }) => {
       </div>
       <div className={`${style.eventPrice} flex-[2]`}>
         <FaEthereum />
-        <div className={style.eventPriceValue}>{event.price}</div>
+        <div className={style.eventPriceValue}>
+          {
+            listings.find(
+              (listing: any) =>
+                parseInt(listing?.asset?.id?._hex, 16) ===
+                parseInt(listingId, 16)
+            )?.buyoutCurrencyValuePerToken.displayValue
+          }
+        </div>
       </div>
       <div className={`${style.accent} flex-[3]`}>
         {event.from.substring(0, 2) +
