@@ -23,17 +23,17 @@ const style = {
 const GeneralDetails = ({ selectedNft }: { selectedNft: any }) => {
   const [owner, setOwner] = useState('Unnamed');
   useEffect(() => {
-    (async () => {
-      const user = await fetch(
-        `https://testnets-api.opensea.io/user/${selectedNft?.owner}`
-      ).then((res) => res.json());
-      if (user?.username) {
-        setOwner(user?.username);
-      } else {
-        setOwner(selectedNft?.owner);
-      }
-    })();
-  }, [selectedNft]);
+    if (selectedNft?.owner) {
+      (async () => {
+        const user = await fetch(`http://localhost:3000/api/userInfo`, {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ owner: selectedNft?.owner }),
+        }).then((res) => res.json());
+        setOwner(user?.name);
+      })();
+    }
+  }, [selectedNft?.owner]);
 
   return (
     <div className={style.wrapper}>
