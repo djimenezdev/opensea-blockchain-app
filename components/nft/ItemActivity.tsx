@@ -1,16 +1,7 @@
 import { CgArrowsExchangeV } from 'react-icons/cg';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
-import moment from 'moment';
 import EventItem from './EventItem';
-
-interface TransactionData {
-  from_account: { address: string };
-  to_account: { address: string };
-  event_type: string;
-  transaction: { transaction_hash: string };
-  created_date: string;
-}
 
 const style = {
   wrapper: `w-full mt-8 border border-[#151b22] rounded-xl bg-[#303339] overflow-hidden`,
@@ -26,67 +17,34 @@ const style = {
   accent: `text-[#2081e2]`,
 };
 
-const getTime = (timestamp: string) => {
-  const current = moment(new Date());
-  const timeOfAction = moment.utc(timestamp).local().format();
-  const seconds = current.diff(timeOfAction, 'seconds');
-  const minutes = current.diff(timeOfAction, 'minutes');
-  const hours = current.diff(timeOfAction, 'hours');
-  const days = current.diff(timeOfAction, 'days');
-  const years = current.diff(timeOfAction, 'years');
-
-  if (minutes < 1 && hours < 1 && days < 1 && years < 1) {
-    return seconds + ' ' + 'seconds ago';
-  } else if (minutes >= 1 && hours < 1 && days < 1 && years < 1) {
-    return minutes + ' ' + 'minutes ago';
-  } else if (minutes >= 1 && hours >= 1 && days < 1 && years < 1) {
-    return hours + ' ' + 'hours ago';
-  } else if (minutes >= 1 && hours >= 1 && days >= 1 && years < 1) {
-    return days + ' ' + `day${days > 1 && 's'} ago`;
-  } else if (minutes >= 1 && hours >= 1 && days >= 1 && years >= 1) {
-    return years + ' ' + `year${years > 1 && 's'} ago`;
-  }
-};
-
-const ItemActivity = ({ selectedNft }: { selectedNft: any }) => {
+const ItemActivity = ({
+  selectedNft,
+  listings,
+}: {
+  selectedNft: any;
+  listings: any;
+}) => {
   const [toggle, setToggle] = useState(true);
   const [transactions, setTransactions] = useState<any>([]);
   useEffect(() => {
-    if (!selectedNft) return;
-    (async () => {
-      const transactionHistory = await fetch(
-        `https://testnets-api.opensea.io/api/v1/events?asset_contract_address=0x9ead73ea86276c6153a3360B6281aCE6808e20F1&only_opensea=false`,
-        {
-          method: 'GET',
-          headers: { Accept: 'application/json' },
-        }
-      ).then((res) => res.json());
-      setTransactions(
-        transactionHistory?.asset_events
-          ?.filter(
-            (transaction: any) =>
-              transaction?.asset?.token_id ===
-              parseInt(selectedNft?.metadata.id?._hex, 16).toString()
-          )
-          .map(
-            ({
-              from_account: { address },
-              created_date,
-              to_account: { address: addr },
-              event_type,
-              transaction: { transaction_hash },
-            }: TransactionData) => ({
-              from: address,
-              to: addr,
-              date: getTime(created_date),
-              price: null,
-              transaction_hash,
-              event_type,
-            })
-          )
-      );
-    })();
-  }, [selectedNft]);
+    if (typeof parseInt(selectedNft?.metadata.id?._hex, 16) === 'number') {
+      (async () => {
+        const transactionHistory = await fetch(
+          `http://localhost:3000/api/assetActivity`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              nftID: parseInt(selectedNft?.metadata.id?._hex, 16).toString(),
+            }),
+          }
+        );
+        setTransactions(await transactionHistory.json());
+      })();
+    }
+  }, [selectedNft?.metadata.id?._hex]);
 
   return (
     <div className={style.wrapper}>
@@ -117,7 +75,15 @@ const ItemActivity = ({ selectedNft }: { selectedNft: any }) => {
             <div className='flex-[2]'>Date</div>
           </div>
           {transactions?.map((event: any, id: string) => (
-            <EventItem key={id} event={event} />
+            <EventItem
+              key={id}
+              event={event}
+              listings={listings}
+              listingId={parseInt(
+                selectedNft?.metadata.id?._hex,
+                16
+              ).toString()}
+            />
           ))}
         </div>
       )}
