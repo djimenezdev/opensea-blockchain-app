@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
-import {BiHeart} from 'react-icons/bi';
-import Router from "next/router";
-import Image from "next/image";
-
+import { useEffect, useState } from 'react';
+import { BiHeart } from 'react-icons/bi';
+import Router from 'next/router';
+import Image from 'next/image';
+import { FaEthereum } from 'react-icons/fa';
 interface NFTCardType {
-  nftItem:{metadata:{image:string, id:string, name:string}},title:string|undefined,listings: Array<any>
+  nftItem: { metadata: { image: string; id: string; name: string } };
+  title: string | undefined;
+  listings: Array<any>;
 }
 
 const style = {
@@ -22,28 +24,38 @@ const style = {
   ethLogo: `relative h-5 w-3 mr-2`,
   likes: `text-[#8a939b] font-bold flex items-center w-full justify-end mt-3`,
   likeIcon: `text-xl mr-2`,
-}
+};
 
-
-const NFTCard = ({nftItem:{metadata:{image,id,name}},title, listings}:NFTCardType) => {
+const NFTCard = ({
+  nftItem: {
+    metadata: { image, id, name },
+  },
+  title,
+  listings,
+}: NFTCardType) => {
   const [isListed, setIsListed] = useState(false);
   const [price, setPrice] = useState(0);
   useEffect(() => {
-   const listing = listings.find((listing) => parseInt(listing?.asset?.id?._hex,16) === parseInt(id, 16));
-   if(!listing)return;
-   setIsListed(true);
-   setPrice(listing.buyoutCurrencyValuePerToken.displayValue);
-}, [listings, id])
+    const listing = listings.find(
+      (listing) => parseInt(listing?.asset?.id?._hex, 16) === parseInt(id, 16)
+    );
+    if (!listing) return;
+    setIsListed(true);
+    setPrice(listing.buyoutCurrencyValuePerToken.displayValue);
+  }, [listings, id]);
   return (
-    <div className={style.wrapper} onClick={() => {
-      Router.push({
-        pathname: `/nfts/${parseInt(id, 16)}`,
-        query:{isListed:isListed}
-      });
-    }}>
+    <div
+      className={style.wrapper}
+      onClick={() => {
+        Router.push({
+          pathname: `/nfts/${parseInt(id, 16)}`,
+          query: { isListed: isListed },
+        });
+      }}
+    >
       <div className={style.imgContainer}>
         <div className={style.nftImg}>
-        <Image src={image} alt={name} layout="fill" />
+          <Image src={image} alt={name} layout='fill' />
         </div>
       </div>
       <div className={style.details}>
@@ -57,9 +69,9 @@ const NFTCard = ({nftItem:{metadata:{image,id,name}},title, listings}:NFTCardTyp
               <div className={style.priceTag}>Price</div>
               <div className={style.priceValue}>
                 <div className={style.ethLogo}>
-              <Image src="https://storage.opensea.io/files/6f8e2979d428180222796ff4a33ab929.svg" alt="eth logo" layout="fill"/>
-             </div>
-              {price}
+                  <FaEthereum />
+                </div>
+                {price}
               </div>
             </div>
           )}
@@ -71,6 +83,6 @@ const NFTCard = ({nftItem:{metadata:{image,id,name}},title, listings}:NFTCardTyp
         </div>
       </div>
     </div>
-  )
-}
-export default NFTCard
+  );
+};
+export default NFTCard;
