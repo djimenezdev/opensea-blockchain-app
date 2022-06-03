@@ -2,6 +2,7 @@ import { CgArrowsExchangeV } from 'react-icons/cg';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import EventItem from './EventItem';
+import { useRouter } from 'next/router';
 
 const style = {
   wrapper: `w-full mt-8 border border-[#151b22] rounded-xl bg-[#303339] overflow-hidden`,
@@ -24,27 +25,26 @@ const ItemActivity = ({
   selectedNft: any;
   listings: any;
 }) => {
+  const router = useRouter();
   const [toggle, setToggle] = useState(true);
   const [transactions, setTransactions] = useState<any>([]);
   useEffect(() => {
-    if (typeof parseInt(selectedNft?.metadata.id?._hex, 16) === 'number') {
-      (async () => {
-        const transactionHistory = await fetch(
-          `https://os-market-clone.vercel.app/api/assetActivity`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              nftID: parseInt(selectedNft?.metadata.id?._hex, 16).toString(),
-            }),
-          }
-        );
-        setTransactions(await transactionHistory.json());
-      })();
-    }
-  }, [selectedNft?.metadata.id?._hex]);
+    (async () => {
+      const transactionHistory = await fetch(
+        `https://os-market-clone.vercel.app/api/assetActivity`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nftID: router.query.nft,
+          }),
+        }
+      );
+      setTransactions(await transactionHistory.json());
+    })();
+  }, [router]);
 
   return (
     <div className={style.wrapper}>
