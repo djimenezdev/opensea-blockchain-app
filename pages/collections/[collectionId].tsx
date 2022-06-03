@@ -108,12 +108,31 @@ const Collection: NextPage = () => {
     <div className='overflow-hidden'>
       <Header />
       <div className={style.bannerImageContainer}>
-        <FaEthereum />
+        <Image
+          className={style.bannerImage}
+          src={
+            collection?.bannerImageUrl
+              ? collection?.bannerImageUrl
+              : 'https://via.placeholder.com/200'
+          }
+          alt='banner'
+          layout='fill'
+          priority
+        />
       </div>
       <div className={style.infoContainer}>
         <div className={style.midRow}>
           <div className={style.profileContainer}>
-            <FaEthereum />
+            <Image
+              className={style.profileImg}
+              src={
+                collection?.imageUrl
+                  ? collection?.imageUrl
+                  : 'https://via.placeholder.com/200'
+              }
+              alt='profile pic'
+              layout='fill'
+            />
           </div>
         </div>
         <div className={style.endRow}>
