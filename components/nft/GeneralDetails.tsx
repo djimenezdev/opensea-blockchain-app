@@ -25,11 +25,14 @@ const GeneralDetails = ({ selectedNft }: { selectedNft: any }) => {
   useEffect(() => {
     if (selectedNft?.owner) {
       (async () => {
-        const user = await fetch(`http://localhost:3000/api/userInfo`, {
-          method: 'post',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ owner: selectedNft?.owner }),
-        }).then((res) => res.json());
+        const user = await fetch(
+          `https://os-market-clone.vercel.app/api/userInfo`,
+          {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ owner: selectedNft?.owner }),
+          }
+        ).then((res) => res.json());
         setOwner(user?.name);
       })();
     }

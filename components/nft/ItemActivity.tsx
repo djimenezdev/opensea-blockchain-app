@@ -30,7 +30,7 @@ const ItemActivity = ({
     if (typeof parseInt(selectedNft?.metadata.id?._hex, 16) === 'number') {
       (async () => {
         const transactionHistory = await fetch(
-          `http://localhost:3000/api/assetActivity`,
+          `https://os-market-clone.vercel.app/api/assetActivity`,
           {
             method: 'POST',
             headers: {
